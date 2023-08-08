@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">week1</string>
+    <string name="app_name">Camp</string>
+    <string name="to_do">ToDo</string>
+    <string name="to_do_bookmarked">BookMarked</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
