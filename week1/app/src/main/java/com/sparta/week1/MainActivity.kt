@@ -2,10 +2,12 @@ package com.sparta.week1
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sparta.week1.adapter.FragmentAdapter
 import com.sparta.week1.databinding.ActivityMainBinding
 
+// AppCompatActivity는 FragmentActivity를 상속받음
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val titleList by lazy {
@@ -22,7 +24,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        pager.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
+        pager.adapter = FragmentAdapter(this@MainActivity as FragmentActivity)
+//        pager.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
+
 
         TabLayoutMediator(tabLayout, pager) { tab, pos ->
             tab.text = titleList[pos]
