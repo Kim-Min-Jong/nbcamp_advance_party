@@ -17,31 +17,23 @@ class FragmentAdapter(fragmentActivity: FragmentActivity)
 
     override fun getItemCount(): Int = 2
 
-    override fun createFragment(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment =
         // 그냥 호출이 아니라 return을 해줘야함 중요
-       when(position) {
+      when(position) {
            0 -> {
                Log.i(TAG, "ToDoFragment ViewPager")
-               return ToDoFragment()
+               ToDoFragment()
            }
            1 -> {
                Log.i(TAG, "BookmarkedToDoFragment ViewPager")
-               return BookmarkedToDoFragment()
+               BookmarkedToDoFragment()
+           }
+           else -> {
+              ToDoFragment()
            }
        }
-        return ToDoFragment()
-    }
+
     companion object {
         const val TAG = "Fragment Adpater"
-    }
-
-    override fun onBindViewHolder(
-        holder: FragmentViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        super.onBindViewHolder(holder, position, payloads)
-        Log.i(TAG, "onBindViewHolder ViewPager")
-
     }
 }

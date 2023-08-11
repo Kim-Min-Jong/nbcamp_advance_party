@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        pager.adapter = FragmentAdapter(this@MainActivity as FragmentActivity)
+        pager.adapter = FragmentAdapter(this@MainActivity)
 //        pager.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
 
 
