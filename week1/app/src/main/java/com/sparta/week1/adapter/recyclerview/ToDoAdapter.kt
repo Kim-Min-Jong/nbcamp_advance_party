@@ -5,10 +5,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sparta.week1.databinding.ItemToDoBinding
+import com.sparta.week1.model.TodoModel
 
-class ToDoAdapter(
-    private val data: List<String>
-) : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
+class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
+    private val data = ArrayList<TodoModel>()
+
+    fun addItem(item: TodoModel) {
+        data.add(item)
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder {
         Log.i(TAG, "onCreateViewHolder - ToDo")
         return ToDoViewHolder(
@@ -30,8 +35,9 @@ class ToDoAdapter(
     inner class ToDoViewHolder(private val binding: ItemToDoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(data: String) {
-            binding.textViewToDo.text = data
+        fun bind(data: TodoModel) = with(binding) {
+            textViewToDo.text = data.title
+            textViewDescription.text = data.description
         }
     }
 

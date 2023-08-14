@@ -5,10 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sparta.week1.databinding.ItemToDoBookmarkedBinding
+import com.sparta.week1.model.BookmarkedTodoModel
 
-class BookmarkedAdapter(
-    private val data: List<String>
-) : RecyclerView.Adapter<BookmarkedAdapter.BookMarkedViewHolder>() {
+class BookmarkedAdapter : RecyclerView.Adapter<BookmarkedAdapter.BookMarkedViewHolder>() {
+    private val data =  ArrayList<BookmarkedTodoModel>()
+    fun addItems(items: List<BookmarkedTodoModel>) {
+        data.addAll(items)
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookMarkedViewHolder {
         Log.i(TAG, "onCreateViewHolder - ToDoBookmarked")
         return BookMarkedViewHolder(
@@ -31,8 +35,8 @@ class BookmarkedAdapter(
     inner class BookMarkedViewHolder(private val binding: ItemToDoBookmarkedBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(data: String) {
-            binding.textViewToDoBookmarked.text = data
+        fun bind(data: BookmarkedTodoModel) {
+            binding.textViewToDoBookmarked.text = data.title
         }
     }
 
