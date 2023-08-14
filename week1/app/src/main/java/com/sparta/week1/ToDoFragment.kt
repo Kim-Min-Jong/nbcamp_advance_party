@@ -11,18 +11,19 @@ import com.sparta.week1.adapter.recyclerview.ToDoAdapter
 import com.sparta.week1.databinding.FragmentToDoBinding
 
 class ToDoFragment : Fragment() {
-    private var binding: FragmentToDoBinding? = null
+    private var _binding: FragmentToDoBinding? = null
+    private val binding
+        get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentToDoBinding.inflate(layoutInflater)
+        _binding = FragmentToDoBinding.inflate(layoutInflater)
         initRecyclerView()
-        return binding?.root
+        return binding.root
     }
 
-    private fun initRecyclerView() = binding?.let {
-        with(it) {
+    private fun initRecyclerView() = with(binding) {
             val list = mutableListOf<String>()
             (0..30).forEach { idx ->
                 list.add("${getString(R.string.to_do)} ${idx + 1}")
@@ -30,10 +31,10 @@ class ToDoFragment : Fragment() {
             toDoRecyclerView.adapter = ToDoAdapter(list)
             toDoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
-    }
+
 
     override fun onDestroyView() {
+        _binding = null
         super.onDestroyView()
-        binding = null
     }
 }

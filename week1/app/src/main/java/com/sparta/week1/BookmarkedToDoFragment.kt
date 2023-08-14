@@ -11,18 +11,19 @@ import com.sparta.week1.adapter.recyclerview.BookmarkedAdapter
 import com.sparta.week1.databinding.FragmentBookmarkedToDoBinding
 
 class BookmarkedToDoFragment : Fragment() {
-    private var binding: FragmentBookmarkedToDoBinding? = null
+    private var _binding: FragmentBookmarkedToDoBinding? = null
+    private val binding
+        get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentBookmarkedToDoBinding.inflate(layoutInflater)
+        _binding = FragmentBookmarkedToDoBinding.inflate(layoutInflater)
         initRecyclerView()
-        return binding?.root
+        return binding.root
     }
 
-    private fun initRecyclerView() = binding?.let {
-        with(it) {
+    private fun initRecyclerView() = with(binding) {
             val list = mutableListOf<String>()
             (0..30).forEach{ idx ->
                 list.add("${getString(R.string.to_do_bookmarked)} ${idx+1}")
@@ -30,10 +31,10 @@ class BookmarkedToDoFragment : Fragment() {
             bookmarkedRecyclerView.adapter = BookmarkedAdapter(list)
             bookmarkedRecyclerView.layoutManager= LinearLayoutManager(requireContext())
         }
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }
