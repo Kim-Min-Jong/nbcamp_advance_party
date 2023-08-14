@@ -1,6 +1,7 @@
 package com.sparta.week1.adapter
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -10,19 +11,19 @@ import com.sparta.week1.BookmarkedToDoFragment
 import com.sparta.week1.R
 import com.sparta.week1.ToDoFragment
 import com.sparta.week1.model.MainTabs
+import com.sparta.week1.model.TodoModel
 
-class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: Bundle)
+class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List<TodoModel>)
+//class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: Bundle)
     : FragmentStateAdapter(fragmentActivity) {
 
     private lateinit var bundle: Bundle
-    private val _fragments = ArrayList<MainTabs>()
-    val fragments: List<MainTabs>
-        get() = _fragments
+    private val fragments = ArrayList<MainTabs>()
     init {
-        _fragments.add(
+        fragments.add(
             MainTabs(ToDoFragment.newInstance(), R.string.to_do)
         )
-        _fragments.add(
+        fragments.add(
             MainTabs(BookmarkedToDoFragment.newInstance(), R.string.to_do_bookmarked),
         )
     }
@@ -31,29 +32,31 @@ class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: Bund
         position: Int,
         payloads: MutableList<Any>
     ) {
-        bundle = item
+//        bundle = item
+        println("viewpager bindview")
         super.onBindViewHolder(holder, position, payloads)
     }
 
-    override fun getItemCount(): Int = _fragments.size
+    override fun getItemCount(): Int = fragments.size
 
     override fun createFragment(position: Int): Fragment =
         // 그냥 호출이 아니라 return을 해줘야함 중요
       when(position) {
            0 -> {
-               Log.i(TAG, "ToDoFragment ViewPager")
-               _fragments[position].fragment.apply {
-                   if(bundle.isEmpty){
-                       return@apply
-                   }
+               println("ToDoFragment ViewPager create")
+               fragments[position].fragment.apply {
+//                   if(bundle.isEmpty){
+//                       return@apply
+//                   }
                    val bundle = Bundle().apply {
-                       putString("title", bundle.getString("title"))
-                       putString("desc", bundle.getString("desc"))
+                       putParcelableArrayList("list", item as ArrayList<out Parcelable>)
+//                       putString("title", bundle.getString("title"))
+//                       putString("desc", bundle.getString("desc"))
                    }
                    arguments = bundle
                }
            }
-           else -> _fragments[position].fragment
+           else -> fragments[position].fragment
        }
 
 

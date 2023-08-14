@@ -1,6 +1,7 @@
 package com.sparta.week1
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,14 +22,19 @@ class ToDoFragment : Fragment() {
     }
     private lateinit var title: String
     private lateinit var description: String
-
+    private var list: List<TodoModel>? = emptyList()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentToDoBinding.inflate(layoutInflater)
-        title = arguments?.getString("title") ?: ""
-        description = arguments?.getString("desc") ?: ""
+        list =  if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelableArrayList("list", TodoModel::class.java)
+        } else {
+            arguments?.getParcelableArrayList("list")
+        }
+//        title = arguments?.getString("title") ?: ""
+//        description = arguments?.getString("desc") ?: ""
         println("todo - CreateView")
         return binding.root
     }
@@ -41,9 +47,11 @@ class ToDoFragment : Fragment() {
 
     private fun initRecyclerView() = with(binding) {
         toDoRecyclerView.adapter = listAdapter.apply {
-            if(title == "" || description == "")
-                return@apply
-            addItem(TodoModel(1, title,description))
+//            if(title == "" || description == "")
+//                return@apply
+//            val model = TodoModel(1, title,description)
+//            addItem(model)
+            addItems(list ?: emptyList())
         }
         toDoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }

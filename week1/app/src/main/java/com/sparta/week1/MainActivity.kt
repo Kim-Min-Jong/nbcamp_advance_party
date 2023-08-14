@@ -1,12 +1,16 @@
 package com.sparta.week1
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sparta.week1.adapter.FragmentAdapter
 import com.sparta.week1.databinding.ActivityMainBinding
+import com.sparta.week1.model.TodoModel
 
 // AppCompatActivity는 FragmentActivity를 상속받음
 class MainActivity : AppCompatActivity() {
@@ -22,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private val viewPagerAdapter by lazy {
-        FragmentAdapter(this@MainActivity, bundle)
+        FragmentAdapter(this@MainActivity, list)
+//        FragmentAdapter(this@MainActivity, bundle)
     }
 
     private val titleList by lazy {
@@ -31,35 +36,36 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.to_do_bookmarked)
         )
     }
-//    private val activityLauncher =
-//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//            if (it.resultCode == Activity.RESULT_OK) {
-//                val title = it.data?.getStringExtra("title") ?: ""
-//                val desc = it.data?.getStringExtra("desc") ?: ""
+    private val activityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val title = it.data?.getStringExtra("title") ?: ""
+                val desc = it.data?.getStringExtra("desc") ?: ""
 //                bundle = Bundle().apply {
 //                    putString("title", title)
 //                    putString("desc", desc)
 //                }
 //                println(bundle.toString())
-//                binding.pager.adapter = viewPagerAdapter
-//            }
-//        }
+                list.add(TodoModel(list.size+1, title, desc))
+            }
+        }
 
     private lateinit var bundle: Bundle
-
+    private val list = arrayListOf<TodoModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("activity oncreate")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initViews()
+        initViews(emptyList())
         initButton()
     }
 
-    private fun initViews() = with(binding) {
-                bundle = Bundle().apply {
-                    putString("title", intent?.getStringExtra("title") ?: "")
-                    putString("desc", intent?.getStringExtra("desc") ?: "")
-                }
+    private fun initViews(list: List<TodoModel>) = with(binding) {
+//        bundle = Bundle().apply {
+//            putString("title", intent?.getStringExtra("title") ?: "")
+//            putString("desc", intent?.getStringExtra("desc") ?: "")
+//        }
         pager.adapter = viewPagerAdapter
 
         TabLayoutMediator(tabLayout, pager) { tab, pos ->
@@ -70,15 +76,44 @@ class MainActivity : AppCompatActivity() {
 
     private fun initButton() = with(binding) {
         fabAddWriting.setOnClickListener {
-//            activityLauncher.launch(
-//                Intent(this@MainActivity, TodoWritingActivity::class.java)
-//            )
-            startActivity(Intent(this@MainActivity, TodoWritingActivity::class.java))
+            activityLauncher.launch(
+                Intent(this@MainActivity, TodoWritingActivity::class.java)
+            )
+//            startActivity(Intent(this@MainActivity, TodoWritingActivity::class.java))
         }
     }
 
     override fun onDestroy() = with(binding) {
+        println("activity destroy")
         pager.unregisterOnPageChangeCallback(callback)
         super.onDestroy()
+    }
+
+    override fun onRestart() {
+        println("activity restart")
+        super.onRestart()
+    }
+
+
+    override fun onResume() {
+        println("activity resume")
+        println(list)
+        initViews(list)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        println("activity pause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        println("activity stop")
+        super.onStop()
+    }
+
+    override fun onStart() {
+        println("activity onstart")
+        super.onStart()
     }
 }
