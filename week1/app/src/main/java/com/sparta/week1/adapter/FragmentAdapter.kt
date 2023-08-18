@@ -45,13 +45,8 @@ class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List
            0 -> {
                println("ToDoFragment ViewPager create")
                fragments[position].fragment.apply {
-//                   if(bundle.isEmpty){
-//                       return@apply
-//                   }
                    val bundle = Bundle().apply {
                        putParcelableArrayList("list", item as ArrayList<out Parcelable>)
-//                       putString("title", bundle.getString("title"))
-//                       putString("desc", bundle.getString("desc"))
                    }
                    arguments = bundle
                }

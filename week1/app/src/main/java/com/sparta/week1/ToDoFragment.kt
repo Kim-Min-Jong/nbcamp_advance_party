@@ -33,8 +33,6 @@ class ToDoFragment : Fragment() {
         } else {
             arguments?.getParcelableArrayList("list")
         }
-//        title = arguments?.getString("title") ?: ""
-//        description = arguments?.getString("desc") ?: ""
         println("todo - CreateView")
         return binding.root
     }
@@ -47,10 +45,6 @@ class ToDoFragment : Fragment() {
 
     private fun initRecyclerView() = with(binding) {
         toDoRecyclerView.adapter = listAdapter.apply {
-//            if(title == "" || description == "")
-//                return@apply
-//            val model = TodoModel(1, title,description)
-//            addItem(model)
             addItems(list ?: emptyList())
         }
         toDoRecyclerView.layoutManager = LinearLayoutManager(requireContext())

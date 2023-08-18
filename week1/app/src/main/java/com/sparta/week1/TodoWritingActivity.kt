@@ -26,10 +26,8 @@ class TodoWritingActivity : AppCompatActivity() {
             val intent = Intent(this@TodoWritingActivity, MainActivity::class.java).apply {
                 putExtra("title", editTextTitle.text.toString())
                 putExtra("desc", editTextDescription.text.toString())
-//                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
             setResult(RESULT_OK, intent)
-//            startActivity(intent)
             finish()
         }
     }

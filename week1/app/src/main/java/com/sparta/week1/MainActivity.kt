@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     }
     private val viewPagerAdapter by lazy {
         FragmentAdapter(this@MainActivity, list)
-//        FragmentAdapter(this@MainActivity, bundle)
     }
 
     private val titleList by lazy {
@@ -41,11 +40,6 @@ class MainActivity : AppCompatActivity() {
             if (it.resultCode == Activity.RESULT_OK) {
                 val title = it.data?.getStringExtra("title") ?: ""
                 val desc = it.data?.getStringExtra("desc") ?: ""
-//                bundle = Bundle().apply {
-//                    putString("title", title)
-//                    putString("desc", desc)
-//                }
-//                println(bundle.toString())
                 list.add(TodoModel(list.size+1, title, desc))
             }
         }
@@ -62,10 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews(list: List<TodoModel>) = with(binding) {
-//        bundle = Bundle().apply {
-//            putString("title", intent?.getStringExtra("title") ?: "")
-//            putString("desc", intent?.getStringExtra("desc") ?: "")
-//        }
         pager.adapter = viewPagerAdapter
 
         TabLayoutMediator(tabLayout, pager) { tab, pos ->
@@ -79,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             activityLauncher.launch(
                 Intent(this@MainActivity, TodoWritingActivity::class.java)
             )
-//            startActivity(Intent(this@MainActivity, TodoWritingActivity::class.java))
         }
     }
 
