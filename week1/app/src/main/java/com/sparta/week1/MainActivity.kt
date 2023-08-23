@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -50,12 +51,21 @@ class MainActivity : AppCompatActivity() {
         println("activity oncreate")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initViews(emptyList())
+        initViews()
         initButton()
     }
 
-    private fun initViews(list: List<TodoModel>) = with(binding) {
-        pager.adapter = viewPagerAdapter
+    private fun initViews() = with(binding) {
+        pager.adapter = viewPagerAdapter.apply {
+            getFragments().find{ it.titleRes == R.string.to_do }?.fragment?.arguments =
+                Bundle().apply {
+                    putParcelableArrayList("list", list as ArrayList<out Parcelable>)
+                }
+            getFragments().find{ it.titleRes == R.string.to_do_bookmarked }?.fragment?.arguments =
+                Bundle().apply {
+                    putParcelableArrayList("list", list.filter { it.isChecked } as ArrayList<out Parcelable>)
+                }
+        }
 
         TabLayoutMediator(tabLayout, pager) { tab, pos ->
             tab.text = titleList[pos]
@@ -86,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         println("activity resume")
         println(list)
-        initViews(list)
+        initViews()
         super.onResume()
     }
 

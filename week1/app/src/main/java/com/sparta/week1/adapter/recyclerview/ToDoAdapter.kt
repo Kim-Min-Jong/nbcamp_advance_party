@@ -47,7 +47,7 @@ class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
             textViewDescription.text = data.description
             checkbox.isChecked = data.isChecked
             checkbox.setOnCheckedChangeListener { view, isChecked ->
-                MainActivity.list.first { it.id == data.id }.isChecked = isChecked
+                MainActivity.list.find { it.id == data.id }?.isChecked = isChecked
             }
         }
     }

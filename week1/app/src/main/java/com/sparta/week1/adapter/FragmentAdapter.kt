@@ -27,6 +27,7 @@ class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List
             MainTabs(BookmarkedToDoFragment.newInstance(), R.string.to_do_bookmarked),
         )
     }
+    fun getFragments() = fragments
     override fun onBindViewHolder(
         holder: FragmentViewHolder,
         position: Int,
@@ -44,21 +45,11 @@ class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List
       when(position) {
            0 -> {
                println("ToDoFragment ViewPager create")
-               fragments[position].fragment.apply {
-                   val bundle = Bundle().apply {
-                       putParcelableArrayList("list", item as ArrayList<out Parcelable>)
-                   }
-                   arguments = bundle
-               }
+               fragments[position].fragment
            }
            else ->{
                println("BookMarkedToDoFragment ViewPager create")
-               fragments[position].fragment.apply {
-                   val bundle = Bundle().apply {
-                       putParcelableArrayList("list", item.filter { it.isChecked } as ArrayList<out Parcelable>)
-                   }
-                   arguments = bundle
-               }
+               fragments[position].fragment
            }
        }
 
