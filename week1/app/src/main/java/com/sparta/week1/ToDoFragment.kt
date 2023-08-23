@@ -3,6 +3,7 @@ package com.sparta.week1
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sparta.week1.adapter.recyclerview.ToDoAdapter
 import com.sparta.week1.databinding.FragmentToDoBinding
 import com.sparta.week1.model.TodoModel
+import java.util.ArrayList
 
 
 class ToDoFragment : Fragment() {
@@ -28,11 +30,7 @@ class ToDoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentToDoBinding.inflate(layoutInflater)
-        list =  if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelableArrayList("list", TodoModel::class.java)
-        } else {
-            arguments?.getParcelableArrayList("list")
-        }
+        list = getList()
         println("todo - CreateView")
         return binding.root
     }
@@ -49,7 +47,13 @@ class ToDoFragment : Fragment() {
         }
         toDoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
-
+    private fun getList(): List<TodoModel>? {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelableArrayList("list", TodoModel::class.java)
+        } else {
+            arguments?.getParcelableArrayList("list")
+        }
+    }
 
     override fun onDestroyView() {
         _binding = null
@@ -69,6 +73,14 @@ class ToDoFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        println("pause"+list)
+        val bundle = Bundle().apply {
+            putParcelableArrayList("list", list as ArrayList<out Parcelable>)
+        }
+// --> 불가능 왜?
+//        arguments = bundle
+
+        parentFragmentManager.setFragmentResult("newList", bundle)
         println("todo - Pause")
     }
 
@@ -90,6 +102,16 @@ class ToDoFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         println("todo - destroy")
+    }
+    override fun onResume() {
+        println("todo - onResume")
+        super.onResume()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        println("todo - onStop")
     }
     companion object {
         fun newInstance() = ToDoFragment()

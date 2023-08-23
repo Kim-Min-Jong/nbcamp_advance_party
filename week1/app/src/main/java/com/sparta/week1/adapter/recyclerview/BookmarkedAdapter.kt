@@ -3,20 +3,22 @@ package com.sparta.week1.adapter.recyclerview
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.sparta.week1.databinding.ItemToDoBookmarkedBinding
-import com.sparta.week1.model.BookmarkedTodoModel
+import com.sparta.week1.databinding.ItemToDoBinding
+import com.sparta.week1.model.TodoModel
 
 class BookmarkedAdapter : RecyclerView.Adapter<BookmarkedAdapter.BookMarkedViewHolder>() {
-    private val data =  ArrayList<BookmarkedTodoModel>()
-    fun addItems(items: List<BookmarkedTodoModel>) {
-        data.addAll(items)
+    private var data = ArrayList<TodoModel>()
+    fun addItems(items: List<TodoModel>) {
+        data.clear()
+        data.addAll(items.filter{ it.isChecked })
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookMarkedViewHolder {
         Log.i(TAG, "onCreateViewHolder - ToDoBookmarked")
         return BookMarkedViewHolder(
-            ItemToDoBookmarkedBinding
+            ItemToDoBinding
                 .inflate(
                     LayoutInflater.from(parent.context),
                     parent,
@@ -32,11 +34,13 @@ class BookmarkedAdapter : RecyclerView.Adapter<BookmarkedAdapter.BookMarkedViewH
         holder.bind(data[position])
     }
 
-    inner class BookMarkedViewHolder(private val binding: ItemToDoBookmarkedBinding) :
+    inner class BookMarkedViewHolder(private val binding: ItemToDoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(data: BookmarkedTodoModel) {
-            binding.textViewToDoBookmarked.text = data.title
+        fun bind(data: TodoModel) {
+            binding.textViewToDo.text = data.title
+            binding.textViewDescription.text = data.description
+            binding.checkbox.isVisible = false
         }
     }
 

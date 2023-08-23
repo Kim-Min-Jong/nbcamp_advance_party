@@ -4,13 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sparta.week1.adapter.FragmentAdapter
 import com.sparta.week1.databinding.ActivityMainBinding
 import com.sparta.week1.model.TodoModel
+import java.util.UUID
 
 // AppCompatActivity는 FragmentActivity를 상속받음
 class MainActivity : AppCompatActivity() {
@@ -40,12 +40,11 @@ class MainActivity : AppCompatActivity() {
             if (it.resultCode == Activity.RESULT_OK) {
                 val title = it.data?.getStringExtra("title") ?: ""
                 val desc = it.data?.getStringExtra("desc") ?: ""
-                list.add(TodoModel(list.size+1, title, desc))
+                list.add(TodoModel(UUID.randomUUID().toString(), title, desc, false))
             }
         }
 
     private lateinit var bundle: Bundle
-    private val list = arrayListOf<TodoModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         println("activity oncreate")
@@ -104,5 +103,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         println("activity onstart")
         super.onStart()
+    }
+    companion object {
+         val list = arrayListOf<TodoModel>()
     }
 }

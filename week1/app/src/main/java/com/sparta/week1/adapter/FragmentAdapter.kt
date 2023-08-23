@@ -2,7 +2,6 @@ package com.sparta.week1.adapter
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -13,6 +12,7 @@ import com.sparta.week1.ToDoFragment
 import com.sparta.week1.model.MainTabs
 import com.sparta.week1.model.TodoModel
 
+@Suppress("UNCHECKED_CAST")
 class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List<TodoModel>)
 //class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: Bundle)
     : FragmentStateAdapter(fragmentActivity) {
@@ -38,7 +38,7 @@ class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List
     }
 
     override fun getItemCount(): Int = fragments.size
-
+    
     override fun createFragment(position: Int): Fragment =
         // 그냥 호출이 아니라 return을 해줘야함 중요
       when(position) {
@@ -51,9 +51,16 @@ class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List
                    arguments = bundle
                }
            }
-           else -> fragments[position].fragment
+           else ->{
+               println("BookMarkedToDoFragment ViewPager create")
+               fragments[position].fragment.apply {
+                   val bundle = Bundle().apply {
+                       putParcelableArrayList("list", item.filter { it.isChecked } as ArrayList<out Parcelable>)
+                   }
+                   arguments = bundle
+               }
+           }
        }
-
 
     companion object {
         const val TAG = "Fragment Adpater"
