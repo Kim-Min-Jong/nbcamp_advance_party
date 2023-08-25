@@ -2,6 +2,7 @@ package com.sparta.week1.adapter
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -12,12 +13,8 @@ import com.sparta.week1.ToDoFragment
 import com.sparta.week1.model.MainTabs
 import com.sparta.week1.model.TodoModel
 
-@Suppress("UNCHECKED_CAST")
-class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List<TodoModel>)
-//class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: Bundle)
+class FragmentAdapter(fragmentActivity: FragmentActivity)
     : FragmentStateAdapter(fragmentActivity) {
-
-    private lateinit var bundle: Bundle
     private val fragments = ArrayList<MainTabs>()
     init {
         fragments.add(
@@ -27,7 +24,7 @@ class FragmentAdapter(fragmentActivity: FragmentActivity, private val item: List
             MainTabs(BookmarkedToDoFragment.newInstance(), R.string.to_do_bookmarked),
         )
     }
-    fun getFragments() = fragments
+    fun getFragments(@StringRes id: Int) = fragments.find{ it.titleRes == id }
     override fun onBindViewHolder(
         holder: FragmentViewHolder,
         position: Int,

@@ -1,6 +1,7 @@
 package com.sparta.week1
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private val viewPagerAdapter by lazy {
-        FragmentAdapter(this@MainActivity, list)
+        FragmentAdapter(this@MainActivity)
     }
 
     private val titleList by lazy {
@@ -56,21 +57,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        pager.adapter = viewPagerAdapter.apply {
-            getFragments().find{ it.titleRes == R.string.to_do }?.fragment?.arguments =
-                Bundle().apply {
-                    putParcelableArrayList("list", list as ArrayList<out Parcelable>)
-                }
-            getFragments().find{ it.titleRes == R.string.to_do_bookmarked }?.fragment?.arguments =
-                Bundle().apply {
-                    putParcelableArrayList("list", list.filter { it.isChecked } as ArrayList<out Parcelable>)
-                }
-        }
-
+        pager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, pager) { tab, pos ->
             tab.text = titleList[pos]
         }.attach()
         pager.registerOnPageChangeCallback(callback)
+    }
+
+    private fun updateList() = with(binding) {
+//        pager.adapter = viewPagerAdapter.apply {
+        val todoFragment = viewPagerAdapter.getFragments(R.string.to_do)?.fragment as ToDoFragment
+        val bookMarkedFragment =
+            viewPagerAdapter.getFragments(R.string.to_do_bookmarked)?.fragment as BookmarkedToDoFragment
+        todoFragment.setList(list)
+        bookMarkedFragment.setList(list.filter { it.isChecked })
     }
 
     private fun initButton() = with(binding) {
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         println("activity resume")
         println(list)
-        initViews()
+        updateList()
         super.onResume()
     }
 
@@ -114,7 +114,10 @@ class MainActivity : AppCompatActivity() {
         println("activity onstart")
         super.onStart()
     }
+
     companion object {
-         val list = arrayListOf<TodoModel>()
+        val list = arrayListOf<TodoModel>()
+        fun newIntent(context: Context): Intent =
+            Intent(context, MainActivity::class.java)
     }
 }

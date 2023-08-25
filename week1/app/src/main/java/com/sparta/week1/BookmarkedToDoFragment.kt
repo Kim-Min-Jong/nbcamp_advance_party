@@ -18,13 +18,14 @@ class BookmarkedToDoFragment : Fragment() {
     private var list: List<TodoModel>? = emptyList()
     private val binding
         get() = _binding!!
-
+    private val listAdapter by lazy {
+        BookmarkedAdapter()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentBookmarkedToDoBinding.inflate(layoutInflater)
-        list = getList()
         return binding.root
     }
 
@@ -34,20 +35,15 @@ class BookmarkedToDoFragment : Fragment() {
     }
 
     private fun initRecyclerView() = with(binding) {
-
-        bookmarkedRecyclerView.adapter = BookmarkedAdapter().apply {
-            addItems(list ?: emptyList())
+        bookmarkedRecyclerView.adapter = listAdapter.apply {
+            addItems(list ?: arrayListOf())
         }
         bookmarkedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
     }
 
-    private fun getList(): List<TodoModel>? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelableArrayList("list", TodoModel::class.java)
-        } else {
-            arguments?.getParcelableArrayList("list")
-        }
+    fun setList(list: List<TodoModel>) {
+        this.list = list
+        listAdapter.addItems(list)
     }
 
     override fun onDestroyView() {
@@ -100,8 +96,7 @@ class BookmarkedToDoFragment : Fragment() {
         ) { _, bundle ->
             list = bundle.getParcelableArrayList("list", TodoModel::class.java)
         }
-        println("resume!" + list)
-        initRecyclerView()
+        listAdapter.addItems(list ?: arrayListOf())
         println("Booktodo - onResume")
         super.onResume()
     }

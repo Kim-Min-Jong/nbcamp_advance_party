@@ -22,15 +22,12 @@ class ToDoFragment : Fragment() {
     private val listAdapter by lazy {
         ToDoAdapter()
     }
-    private lateinit var title: String
-    private lateinit var description: String
-    private var list: List<TodoModel>? = emptyList()
+    private var list: List<TodoModel>? = listOf()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentToDoBinding.inflate(layoutInflater)
-        list = getList()
         println("todo - CreateView")
         return binding.root
     }
@@ -43,16 +40,14 @@ class ToDoFragment : Fragment() {
 
     private fun initRecyclerView() = with(binding) {
         toDoRecyclerView.adapter = listAdapter.apply {
-            addItems(list ?: emptyList())
+            addItems(list ?: arrayListOf())
         }
         toDoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
-    private fun getList(): List<TodoModel>? {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelableArrayList("list", TodoModel::class.java)
-        } else {
-            arguments?.getParcelableArrayList("list")
-        }
+
+    fun setList(list: List<TodoModel>) {
+        this.list = list
+        listAdapter.addItems(list)
     }
 
     override fun onDestroyView() {
@@ -73,11 +68,10 @@ class ToDoFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        println("pause"+list)
         val bundle = Bundle().apply {
-            putParcelableArrayList("list", list as ArrayList<out Parcelable>)
+            putParcelableArrayList("list", list as ArrayList<TodoModel>)
         }
-// --> 불가능 왜?
+// --> 불가능 왜? 이걸로는 bookmark fragment로 전송자체를 못하나?
 //        arguments = bundle
 
         parentFragmentManager.setFragmentResult("newList", bundle)

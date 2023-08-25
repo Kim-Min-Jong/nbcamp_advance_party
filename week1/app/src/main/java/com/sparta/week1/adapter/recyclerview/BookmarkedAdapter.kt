@@ -9,7 +9,7 @@ import com.sparta.week1.databinding.ItemToDoBinding
 import com.sparta.week1.model.TodoModel
 
 class BookmarkedAdapter : RecyclerView.Adapter<BookmarkedAdapter.BookMarkedViewHolder>() {
-    private var data = ArrayList<TodoModel>()
+    private val data = ArrayList<TodoModel>()
     fun addItems(items: List<TodoModel>) {
         data.clear()
         data.addAll(items.filter{ it.isChecked })

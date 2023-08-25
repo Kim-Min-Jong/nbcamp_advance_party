@@ -9,15 +9,11 @@ import com.sparta.week1.databinding.ItemToDoBinding
 import com.sparta.week1.model.TodoModel
 
 class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
-    private var datas = ArrayList<TodoModel>()
+    private val datas = ArrayList<TodoModel>()
 
-    fun addItem(item: TodoModel) {
-        datas.add(item)
-        notifyDataSetChanged()
-    }
     fun addItems(items: List<TodoModel>) {
         datas.clear()
-        datas.addAll(items as ArrayList<TodoModel>)
+        datas.addAll(items)
         notifyDataSetChanged()
     }
 
