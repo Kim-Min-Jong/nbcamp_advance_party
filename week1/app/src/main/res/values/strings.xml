@@ -5,6 +5,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="todo_submit">등록</string>
+    <string name="todo_modify">수정</string>
     <string name="title">제목</string>
     <string name="description">내용</string>
 </resources>

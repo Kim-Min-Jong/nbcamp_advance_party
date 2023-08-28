@@ -4,16 +4,26 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.sparta.week1.adapter.listener.ItemClickListener
 import com.sparta.week1.databinding.ItemToDoBinding
 import com.sparta.week1.model.TodoModel
 
 class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
     private val modelList = ArrayList<TodoModel>()
+    private lateinit var itemClickListener: ItemClickListener
 
     fun addItem(item: TodoModel) {
         modelList.add(item)
         notifyDataSetChanged()
 //        notifyItemChanged(modelList.size - 1)
+    }
+
+    fun updateItem(item: TodoModel) {
+        modelList.find { it.id == item.id }?.apply {
+            title = item.title
+            description = item.description
+        }
+        notifyDataSetChanged()
     }
 
     fun getItems() = modelList
@@ -33,9 +43,17 @@ class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
         holder.bind(modelList[position])
     }
 
+    fun setOnItemClickListener(listener: ItemClickListener) {
+        itemClickListener = listener
+    }
+
     inner class ToDoViewHolder(private val binding: ItemToDoBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
+        init {
+            binding.root.setOnClickListener {
+                itemClickListener.onItemClick(adapterPosition)
+            }
+        }
         fun bind(data: TodoModel) = with(binding) {
             textViewToDo.text = data.title
             textViewDescription.text = data.description

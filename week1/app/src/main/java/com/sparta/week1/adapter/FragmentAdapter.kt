@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
-import com.sparta.week1.BookmarkedToDoFragment
+import com.sparta.week1.view.bookmark.BookmarkedToDoFragment
 import com.sparta.week1.R
-import com.sparta.week1.ToDoFragment
+import com.sparta.week1.view.todo.ToDoFragment
 import com.sparta.week1.model.MainTabs
 
 class FragmentAdapter(fragmentActivity: FragmentActivity)

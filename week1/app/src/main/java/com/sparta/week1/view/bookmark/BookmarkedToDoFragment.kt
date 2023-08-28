@@ -1,4 +1,4 @@
-package com.sparta.week1
+package com.sparta.week1.view.bookmark
 
 import android.content.Context
 import android.os.Build
@@ -35,55 +35,13 @@ class BookmarkedToDoFragment : Fragment() {
     }
 
     private fun initRecyclerView() = with(binding) {
-        bookmarkedRecyclerView.adapter = listAdapter.apply {
-            addItems(list ?: arrayListOf())
-        }
+        bookmarkedRecyclerView.adapter = listAdapter
         bookmarkedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    fun setList(list: List<TodoModel>) {
-        this.list = list
-        listAdapter.addItems(list)
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        println("Booktodo - Attach")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        println("Booktodo - Detach")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        println("Booktodo - Pause")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        println("Booktodo - Stop")
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        println("Booktodo - Viewstaterestored")
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        println("Booktodo - saveInstanceState")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        println("Booktodo - destroy")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -99,11 +57,6 @@ class BookmarkedToDoFragment : Fragment() {
         listAdapter.addItems(list ?: arrayListOf())
         println("Booktodo - onResume")
         super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        println("Booktodo - onStop")
     }
 
     companion object {
