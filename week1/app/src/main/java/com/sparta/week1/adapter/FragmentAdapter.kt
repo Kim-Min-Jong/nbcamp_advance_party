@@ -1,7 +1,5 @@
 package com.sparta.week1.adapter
 
-import android.os.Bundle
-import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -11,7 +9,6 @@ import com.sparta.week1.BookmarkedToDoFragment
 import com.sparta.week1.R
 import com.sparta.week1.ToDoFragment
 import com.sparta.week1.model.MainTabs
-import com.sparta.week1.model.TodoModel
 
 class FragmentAdapter(fragmentActivity: FragmentActivity)
     : FragmentStateAdapter(fragmentActivity) {
@@ -24,31 +21,20 @@ class FragmentAdapter(fragmentActivity: FragmentActivity)
             MainTabs(BookmarkedToDoFragment.newInstance(), R.string.to_do_bookmarked),
         )
     }
-    fun getFragments(@StringRes id: Int) = fragments.find{ it.titleRes == id }
+    fun getFragments(position: Int) = fragments[position].fragment
+    fun getFragmentsById(@StringRes id: Int) = fragments.find{ it.titleRes == id }?.fragment
     override fun onBindViewHolder(
         holder: FragmentViewHolder,
         position: Int,
         payloads: MutableList<Any>
     ) {
-//        bundle = item
-        println("viewpager bindview")
         super.onBindViewHolder(holder, position, payloads)
     }
 
     override fun getItemCount(): Int = fragments.size
     
     override fun createFragment(position: Int): Fragment =
-        // 그냥 호출이 아니라 return을 해줘야함 중요
-      when(position) {
-           0 -> {
-               println("ToDoFragment ViewPager create")
-               fragments[position].fragment
-           }
-           else ->{
-               println("BookMarkedToDoFragment ViewPager create")
-               fragments[position].fragment
-           }
-       }
+        fragments[position].fragment
 
     companion object {
         const val TAG = "Fragment Adpater"

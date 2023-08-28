@@ -4,22 +4,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.sparta.week1.MainActivity
 import com.sparta.week1.databinding.ItemToDoBinding
 import com.sparta.week1.model.TodoModel
 
 class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
-    private val datas = ArrayList<TodoModel>()
+    private val modelList = ArrayList<TodoModel>()
 
-    fun addItems(items: List<TodoModel>) {
-        datas.clear()
-        datas.addAll(items)
+    fun addItem(item: TodoModel) {
+        modelList.add(item)
         notifyDataSetChanged()
+//        notifyItemChanged(modelList.size - 1)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder {
-        Log.i(TAG, "onCreateViewHolder - ToDo")
-        return ToDoViewHolder(
+    fun getItems() = modelList
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder = ToDoViewHolder(
             ItemToDoBinding
                 .inflate(
                     LayoutInflater.from(parent.context),
@@ -27,12 +26,11 @@ class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
                     false
                 )
         )
-    }
 
-    override fun getItemCount(): Int = datas.size
+    override fun getItemCount(): Int = modelList.size
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         Log.i(TAG, "onBindViewHolder - ToDo $position")
-        holder.bind(datas[position])
+        holder.bind(modelList[position])
     }
 
     inner class ToDoViewHolder(private val binding: ItemToDoBinding) :
@@ -42,8 +40,8 @@ class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
             textViewToDo.text = data.title
             textViewDescription.text = data.description
             checkbox.isChecked = data.isChecked
-            checkbox.setOnCheckedChangeListener { view, isChecked ->
-                MainActivity.list.find { it.id == data.id }?.isChecked = isChecked
+            checkbox.setOnCheckedChangeListener { _, isChecked ->
+                modelList.find { it.id == data.id }?.isChecked = isChecked
             }
         }
     }
