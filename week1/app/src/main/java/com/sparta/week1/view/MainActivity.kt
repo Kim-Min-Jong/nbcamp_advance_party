@@ -6,25 +6,25 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sparta.week1.view.bookmark.BookmarkedToDoFragment
 import com.sparta.week1.R
 import com.sparta.week1.view.todo.ToDoFragment
-import com.sparta.week1.view.todo.TodoContentActivity.Companion.EXTRA_TODO_MODEL
+import com.sparta.week1.view.todo.add.TodoContentActivity.Companion.EXTRA_TODO_MODEL
 import com.sparta.week1.adapter.FragmentAdapter
 import com.sparta.week1.databinding.ActivityMainBinding
 import com.sparta.week1.model.TodoModel
-import com.sparta.week1.view.todo.TodoContentActivity
-import com.sparta.week1.view.todo.TodoContentActivity.Companion.EXTRA_TYPE
+import com.sparta.week1.view.todo.add.TodoContentActivity
+import com.sparta.week1.view.todo.add.TodoContentActivity.Companion.EXTRA_TYPE
 import com.sparta.week1.view.type.TodoContentType
 
 // AppCompatActivity는 FragmentActivity를 상속받음
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var todoModel: TodoModel? = null
-    private var type: TodoContentType? = null
     private val callback by lazy {
         object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -45,37 +45,22 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.to_do_bookmarked)
         )
     }
-    private val activityLauncher =
+    private val _activityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    todoModel = it.data?.getParcelableExtra(EXTRA_TODO_MODEL, TodoModel::class.java)
-                    type = it.data?.getSerializableExtra(
-                        EXTRA_TYPE,
-                        TodoContentType::class.java
-                    ) as TodoContentType
+                todoModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    it.data?.getParcelableExtra(EXTRA_TODO_MODEL, TodoModel::class.java)
                 } else {
-                    todoModel = it.data?.getParcelableExtra(EXTRA_TODO_MODEL)
-                    type = it.data?.getSerializableExtra(EXTRA_TYPE) as TodoContentType
+                    it.data?.getParcelableExtra(EXTRA_TODO_MODEL)
                 }
-                val todoFragment =
-                    viewPagerAdapter.getFragmentsById(R.string.to_do) as? ToDoFragment
-                when (type) {
-                    TodoContentType.ADD -> {
-                        todoFragment?.addContent(todoModel)
-                    }
-
-                    TodoContentType.EDIT -> {
-                        todoFragment?.updateContent(todoModel)
-                    }
-
-                    else -> {}
-                }
+                val todoFragment = viewPagerAdapter.getFragmentsById(R.string.to_do) as? ToDoFragment
+                todoFragment?.addContent(todoModel)
                 todoFragment?.setOnClickListener()
             }
         }
+    val activityLauncher: ActivityResultLauncher<Intent>
+        get() = _activityLauncher
 
-    fun getLauncher() = activityLauncher
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)

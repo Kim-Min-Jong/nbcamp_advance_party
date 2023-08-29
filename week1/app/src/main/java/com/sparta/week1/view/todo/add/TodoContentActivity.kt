@@ -1,4 +1,4 @@
-package com.sparta.week1.view.todo
+package com.sparta.week1.view.todo.add
 
 import android.content.Context
 import android.content.Intent
@@ -96,8 +96,6 @@ class TodoContentActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_TODO_MODEL = "todo_model"
-        const val EXTRA_TITLE = "title"
-        const val EXTRA_DESCRIPTION = "description"
         const val EXTRA_TYPE = "type"
         fun newIntentForAdd(context: Context) =
             Intent(context, TodoContentActivity::class.java).apply {
